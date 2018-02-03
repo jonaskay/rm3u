@@ -9,9 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Jonas Kay"]
   spec.email         = ["jonas-kay@outlook.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = "Parse M3U playlist files"
+  spec.homepage      = "https://github.com/jonaskay/rm3u"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

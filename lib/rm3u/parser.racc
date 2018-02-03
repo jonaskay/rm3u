@@ -1,0 +1,73 @@
+class Rm3u::Parser
+token EXT EXT_TEXT EXTINF EXTM3U PATH REM 
+  
+rule
+  target        : m3u_playlist
+                    {
+                      if @current_segment
+                        @playlist.segments << @current_segment
+                      end
+                      result = @playlist
+                    }
+                | /* empty */
+  
+  m3u_playlist  : EXTM3U contents
+                    {
+                      @playlist.header = Rm3u::Tag.new(name: val[0])
+                    }
+                | EXTM3U
+                    {
+                      @playlist.header = Rm3u::Tag.new(name: val[0])
+                    }
+                | contents
+
+  contents      : content 
+                | contents content
+
+  content       : REM
+                | EXT
+                    {
+                      @playlist.tags << Rm3u::Tag.new(name: val[0])
+                    }
+                | EXT EXT_TEXT
+                    {
+                      @playlist.tags << Rm3u::Tag.new(name: val[0], content: val[1])
+                    }
+                | EXTINF
+                    { 
+                      if @current_segment
+                        @playlist.segments << @current_segment
+                      end
+                      @current_segment = Rm3u::Segment.new
+                      @current_segment.tags << Rm3u::Tag.new(name: val[0])
+                    }
+                | EXTINF EXT_TEXT
+                    {
+                      if @current_segment
+                        @playlist.segments << @current_segment
+                      end
+                      @current_segment = Rm3u::Segment.new 
+                      @current_segment.tags << Rm3u::Tag.new(name: val[0], content: val[1])
+                    }
+                | PATH                
+                    {
+                      if @current_segment
+                        @current_segment.path = val[0]
+                        @playlist.segments << @current_segment
+                        @current_segment = nil
+                      else
+                        @playlist.segments << Rm3u::Segment.new(path: val[0])
+                      end
+                    }
+end
+
+---- header
+  require_relative 'lexer'
+
+---- inner 
+  attr_accessor :playlist, :current_segment
+
+  def initialize
+    @playlist = Rm3u::Playlist.new
+    @current_segment = nil
+  end

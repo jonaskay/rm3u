@@ -1,0 +1,9 @@
+#EXTM3U
+
+# Track information
+#EXTINF:123, Sample artist - Sample title
+# Relative file path
+Sample.mp3
+
+#EXTINF:321,Example Artist - Example title
+Greatest Hits\Example.ogg

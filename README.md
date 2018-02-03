@@ -1,34 +1,52 @@
 # Rm3u
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rm3u`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Rm3u is a simple parser for reading M3U playlist files.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+This gem is currently not available for installation via Rubygems.
+
+## Usage (parsing)
+
+Read a playlist from a string.
 
 ```ruby
-gem 'rm3u'
+playlist = Rm3u::Playlist.parse("#EXTM3U\n#EXTINF:123,Foobar - Foobar\nFoobar.mp3")
+playlist
+# => #<Rm3u::Playlist:0x00007fffbd14e820 @header=#<Rm3u::Tag:0x00007fffbd14e0a0 @name="#EXTM3U", @content=nil>, @tags=[], @segments=[#<Rm3u::Segment:0x00007fffbd14e348 @path="Foobar.mp3", @tags=[#<Rm3u::Tag:0x00007fffbd14e2a8 @name="#EXTINF", @content="123,Foobar - Foobar">]>]>
 ```
 
-And then execute:
+Read a playlist from a file.
 
-    $ bundle
+```ruby
+playlist = Rm3u::Playlist.parse_file("test/fixtures/simple.m3u")
+playlist
+```
 
-Or install it yourself as:
+## M3U format
 
-    $ gem install rm3u
+There is no formal specification for the M3U format. Therefore, Rm3u does not follow any particular standard. The following is the specification used by Rm3u:
 
-## Usage
+* Each line is either blank, pathname or starts with the '#' character.
+* Comment and tag lines are prefaced by the '#' character. Tags begin with #EXT. Other lines beginning with # are comments which are ignored by the parser.
+* #EXTM3U tags are header tags. If the header tag is present, it should be the first line of the file.
+* #EXTINF tags provide further information for playlist items.
 
-TODO: Write usage instructions here
+Rm3u::Playlist has a header, tags, and segments:
 
-## Development
+* Header refers to the #EXTM3U tag. It's an instance of the Rm3u::Tag class. You can access header with `playlist.header`.
+* Tags is a collection of Rm3u::Tag instances that do not belong to any segment. You can access tags with `playlist.tags`.
+* Segments represent playlist items (tracks, URIs, or other playlists). Segments is a collection of Rm3u::Segment instances. You can access segments with `playlist.segments`.
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Rm3u::Tag has a name and content:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+* Name is the name of the tag (e.g. "#EXTM3U", "EXTINF"). You can access name with `tag.name`.
+* Content is the possible text content that follows the tag. You can access content with `tag.content`.
+
+Rm3u::Segment has a path and tags:
+
+* Path is the pathname of the segment. You can access path with `segment.path`.
+* Tags is a collection of Rm3u::Tag instances associated to the segment. You can access tags with `segment.tags`
 
 ## Contributing
 
