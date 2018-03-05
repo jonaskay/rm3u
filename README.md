@@ -13,7 +13,20 @@ Read a playlist from a string.
 ```ruby
 playlist = Rm3u::Playlist.parse("#EXTM3U\n#EXTINF:123,Foobar - Foobar\nFoobar.mp3")
 playlist
-# => #<Rm3u::Playlist:0x00007fffbd14e820 @header=#<Rm3u::Tag:0x00007fffbd14e0a0 @name="#EXTM3U", @content=nil>, @tags=[], @segments=[#<Rm3u::Segment:0x00007fffbd14e348 @path="Foobar.mp3", @tags=[#<Rm3u::Tag:0x00007fffbd14e2a8 @name="#EXTINF", @content="123,Foobar - Foobar">]>]>
+# => #<Rm3u::Playlist:0x00007fffbd14e820 
+#      @header=#<Rm3u::Tag:0x00007fffbd14e0a0 
+#      @name="#EXTM3U", 
+#      @content=nil>, 
+#      @tags=[], 
+#      @segments=[
+#        #<Rm3u::Segment:0x00007fffbd14e348 
+#          @path="Foobar.mp3", 
+#          @tags=[
+#            #<Rm3u::Tag:0x00007fffbd14e2a8 
+#              @name="#EXTINF", 
+#              @content="123,Foobar - Foobar">
+#          ]>
+#      ]>
 ```
 
 Read a playlist from a file.
@@ -21,6 +34,17 @@ Read a playlist from a file.
 ```ruby
 playlist = Rm3u::Playlist.parse_file("test/fixtures/simple.m3u")
 playlist
+# => #<Rm3u::Playlist:0x00007fffd8428198 
+#      @header=nil, 
+#      @tags=[], 
+#      @segments=[
+#        #<Rm3u::Segment:0x00007fffd8443718 
+#          @path="C:\\Documents and Settings\\I\\My Music\\Sample.mp3",
+#          @tags=[]>, 
+#        #<Rm3u::Segment:0x00007fffd84434e8 
+#          @path="C:\\Documents and Settings\\I\\My Music\\Greatest Hits\\Example.ogg", 
+#          @tags=[]>
+#      ]>
 ```
 
 ## M3U format
